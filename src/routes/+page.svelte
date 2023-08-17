@@ -1,37 +1,135 @@
-<div class="calc">
-    <div class="calc-header">
-        <h1>Hello,World</h1>
-    </div>
-    <div class="calc-content">
-        <div class="calc-btn">
-            
-        </div>
-    </div>
-</div>
+<script lang="ts">
+    let prevNum: int;
+    let newNum: int;
+    let oprt: string;
+    let chk: bool;
+    
+    function Factorial(num:int): int{
+        if(num == 1){
+            return num;
+        }
+        return num * Factorial(num-1);
+    }
+
+    function AppendNum(test){
+        let ans = document.getElementById("ans");
+        if(chk == true){
+            Clear();
+            chk = false;
+        }
+        if(ans.innerText.length == 10 || ans.innerText === '0'){
+            ans.innerText = "";
+        }
+        if(typeof test === 'string' && ans.innerText !== '0'){
+            ans.innerText += '00';
+            newNum = Number(ans.innerText);
+            return;
+        }
+        ans.innerText += test;
+        newNum = Number(ans.innerText);
+    }   
+    function Operator(opr){
+        let ans = document.getElementById("ans");
+        prevNum = Number(ans.innerText);
+        oprt = opr;
+        if(opr.length === 3){
+            ans.innerText = "0";
+        }
+    } 
+    function Equal(){
+        let ans = document.getElementById("ans");
+        switch (oprt) {
+            case "add":
+                ans.innerText = prevNum + newNum;
+                break;
+            case "min":
+                ans.innerText = prevNum - newNum;
+                break;
+            case "div":
+                ans.innerText = prevNum / newNum;
+                break;
+            case "mul":
+                ans.innerText = prevNum * newNum;
+                break;
+            case "fact":
+                console.log(oprt);
+                ans.innerText = String(Factorial(prevNum));
+                break;
+            default:
+                break;
+        }
+        chk = true;
+    }
+    function Clear(){
+        prevNum = 0;
+        newNum = 0;
+        oprt = '';
+        ans.innerText = "0";
+    }
+</script>
+
+<table>
+    <tr>
+        <th colspan="4"><span class="header" id="ans">0</span></th>
+    </tr>
+    <tr>
+        <td on:click={() => Clear()}>C</td>
+        <td on:click={() => Operator('sqrt')}>&radic;</td>
+        <td on:click={() => Operator('fact')}>!</td>
+        <td on:click={() => Operator('asd')}>..</td>
+    </tr> 
+    <tr>
+        <td on:click={() => AppendNum(7)}>7</td>
+        <td on:click={() => AppendNum(8)}>8</td>
+        <td on:click={() => AppendNum(9)}>9</td>
+        <td on:click={() => Operator('div')}>/</td>
+    </tr>
+    <tr>
+        <td on:click={() => AppendNum(4)}>4</td>
+        <td on:click={() => AppendNum(5)}>5</td>
+        <td on:click={() => AppendNum(6)}>6</td>
+        <td on:click={() => Operator('mul')}>*</td>
+    </tr>   
+    <tr>
+        <td on:click={() => AppendNum(1)}>1</td>
+        <td on:click={() => AppendNum(2)}>2</td>
+        <td on:click={() => AppendNum(3)}>3</td>
+        <td on:click={() => Operator('min')}>-</td>
+    </tr>
+    <tr>
+        <td on:click={() => AppendNum(0)}>0</td>
+        <td on:click={() => AppendNum('00')}>00</td>
+        <td on:click={() => Equal()}>=</td>
+        <td on:click={() => Operator('add')}>+</td>
+    </tr>
+</table>
 
 <style>
-    .calc{
-        border-radius: 20px;
-        border-style: solid;
-        position: absolute;
-        top: 10%;
-        left: 35%;
-        height: 600px;
-        width:500px;
+    @font-face{
+        font-family: Digital;
+        font-style: normal;
+        font-weight: 550;
+        src: url('/fonts/Digital7-rg1mL.ttf');
     }
-    .calc-header{
-        border-radius: 20px;
-        position: relative;
-        border-style: solid;
-        color:red;
-        left: 25px;
-        top: 25px;
-        width: 450px;
-        height: 100px;
-        display: flex;
+    table{
+        font-family: Digital;
+        width: 700px;
+        height: 500px;
+        font-size: 50px;
     }
-    .calc-header h1{
-        position: relative;
-
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
     }
-</style>
+    tr td{
+        text-align: center;
+    }
+    tr td:hover{
+        background-color: rgba(31, 31, 32, 0.425);
+        cursor: pointer;
+    }
+    .header{
+        float: right;
+        margin-right: 30px;
+    }
+    </style>
