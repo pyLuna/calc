@@ -17,15 +17,15 @@
             Clear();
             chk = false;
         }
-        if(ans.innerText.length == 10 || ans.innerText === '0'){
+        if(ans.innerText === '0'){
             ans.innerText = "";
         }
         if(typeof test === 'string' && ans.innerText !== '0'){
             ans.innerText += '00';
-            newNum = Number(ans.innerText);
-            return;
         }
-        ans.innerText += test;
+        else{
+            ans.innerText += test;
+        }
         newNum = Number(ans.innerText);
     }   
     function Operator(opr){
@@ -34,6 +34,9 @@
         oprt = opr;
         if(opr.length === 3){
             ans.innerText = "0";
+        }
+        if(opr === "fact" && ans.innerText.charAt(ans.innerText.length-1) !== '!'){
+            ans.innerText += "!";
         }
     } 
     function Equal(){
@@ -52,8 +55,7 @@
                 ans.innerText = prevNum * newNum;
                 break;
             case "fact":
-                console.log(oprt);
-                ans.innerText = String(Factorial(prevNum));
+                ans.innerText = String(Factorial(Number(ans.innerText.slice(0,-1))));
                 break;
             default:
                 break;
@@ -76,31 +78,30 @@
         <td on:click={() => Clear()}>C</td>
         <td on:click={() => Operator('sqrt')}>&radic;</td>
         <td on:click={() => Operator('fact')}>!</td>
-        <td on:click={() => Operator('asd')}>..</td>
+        <td on:click={() => Operator('div')}>/</td>
     </tr> 
     <tr>
-        <td on:click={() => AppendNum(7)}>7</td>
+        <td rowspan="" on:click={() => AppendNum(7)}>7</td>
         <td on:click={() => AppendNum(8)}>8</td>
         <td on:click={() => AppendNum(9)}>9</td>
-        <td on:click={() => Operator('div')}>/</td>
+        <td on:click={() => Operator('mul')}>*</td>
     </tr>
     <tr>
         <td on:click={() => AppendNum(4)}>4</td>
         <td on:click={() => AppendNum(5)}>5</td>
         <td on:click={() => AppendNum(6)}>6</td>
-        <td on:click={() => Operator('mul')}>*</td>
+        <td on:click={() => Operator('min')}>-</td>
     </tr>   
     <tr>
         <td on:click={() => AppendNum(1)}>1</td>
         <td on:click={() => AppendNum(2)}>2</td>
         <td on:click={() => AppendNum(3)}>3</td>
-        <td on:click={() => Operator('min')}>-</td>
+        <td rowspan="2" on:click={() => Operator('add')}>+</td>
     </tr>
     <tr>
         <td on:click={() => AppendNum(0)}>0</td>
         <td on:click={() => AppendNum('00')}>00</td>
         <td on:click={() => Equal()}>=</td>
-        <td on:click={() => Operator('add')}>+</td>
     </tr>
 </table>
 
@@ -113,9 +114,13 @@
     }
     table{
         font-family: Digital;
-        width: 700px;
+        width: 600px;
         height: 500px;
-        font-size: 50px;
+        font-size: 40px;
+        table-layout: fixed;
+        position: absolute;
+        top:20%;
+        left: 30%;
     }
     table, th, td {
       border: 1px solid black;
