@@ -1,107 +1,112 @@
 <script lang="ts">
-    let prevNum: int;
-    let newNum: int;
-    let oprt: string;
-    let chk: bool;
-    
-    function Factorial(num:int): int{
+    let ans = '0';
+    let sqrt = '&radic;';
+    let oprt = "";
+    let chk = false;
+
+    function Squared(num: number): number{
+        return Math.sqrt(num);
+    }
+    function Factorial(num:number): number{
         if(num == 1){
             return num;
         }
         return num * Factorial(num-1);
     }
-
-    function AppendNum(test){
-        let ans = document.getElementById("ans");
-        if(chk == true){
-            Clear();
+    function AddZero(inc: number){
+        let i = 0;
+        while(i < inc){
+            ans += '0';
+            i++;
+        }
+    }
+    function Append(num:any){
+        if(endsWithOperator(ans) && isNaN(num)){ 
+            return; 
+        }
+        if(chk){
+            if(!isNaN(num)){
+                Clear();                
+            }
             chk = false;
         }
-        if(ans.innerText === '0'){
-            ans.innerText = "";
+        if(num === '!'){
+            if(ans.includes('!')){return;}
+            oprt = 'fact';
         }
-        if(typeof test === 'string' && ans.innerText !== '0'){
-            ans.innerText += '00';
+        if(ans === '0'){
+            ans = "";
         }
-        else{
-            ans.innerText += test;
+        if(num === 'sq'){
+            ans += sqrt;
+            oprt = 'sq';
+            return;
         }
-        newNum = Number(ans.innerText);
-    }   
-    function Operator(opr){
-        let ans = document.getElementById("ans");
-        prevNum = Number(ans.innerText);
-        oprt = opr;
-        if(opr.length === 3){
-            ans.innerText = "0";
-        }
-        if(opr === "fact" && ans.innerText.charAt(ans.innerText.length-1) !== '!'){
-            ans.innerText += "!";
-        }
-    } 
+        ans += num;
+    }
+    function endsWithOperator(str: string) {
+        var lastChar = str.charAt(str.length - 1);
+        return lastChar === '+' || lastChar === '-' || lastChar === '/' || lastChar === '*';
+    }
     function Equal(){
-        let ans = document.getElementById("ans");
-        switch (oprt) {
-            case "add":
-                ans.innerText = prevNum + newNum;
-                break;
-            case "min":
-                ans.innerText = prevNum - newNum;
-                break;
-            case "div":
-                ans.innerText = prevNum / newNum;
-                break;
-            case "mul":
-                ans.innerText = prevNum * newNum;
-                break;
-            case "fact":
-                ans.innerText = String(Factorial(Number(ans.innerText.slice(0,-1))));
-                break;
-            default:
-                break;
+        if(oprt === ""){
+            ans = eval(ans);
+            chk = true;
+            return;
         }
-        chk = true;
+        if(oprt === 'fact'){
+            oprt = "";
+            return ans = String(Factorial(Number(ans.slice(0,-1))));
+        }
+        if(oprt === "sq"){
+            oprt = "";
+            return ans = String(Squared(Number(ans.replace('&radic;',''))));
+        }
     }
     function Clear(){
-        prevNum = 0;
-        newNum = 0;
-        oprt = '';
-        ans.innerText = "0";
+        ans = '0';
+    }
+    function Backspace(){
+        ans = ans.slice(0,-1);
+        if(ans.length === 0){
+            ans = '0';
+        }
     }
 </script>
 
 <table>
     <tr>
-        <th colspan="4"><span class="header" id="ans">0</span></th>
+        <th colspan="4"><span class="header" id="ans">{@html ans}</span></th>
     </tr>
     <tr>
         <td on:click={() => Clear()}>C</td>
-        <td on:click={() => Operator('sqrt')}>&radic;</td>
-        <td on:click={() => Operator('fact')}>!</td>
-        <td on:click={() => Operator('div')}>/</td>
-    </tr> 
-    <tr>
-        <td rowspan="" on:click={() => AppendNum(7)}>7</td>
-        <td on:click={() => AppendNum(8)}>8</td>
-        <td on:click={() => AppendNum(9)}>9</td>
-        <td on:click={() => Operator('mul')}>*</td>
+        <td on:click={() => Append('sq')}>&radic;</td>
+        <td on:click={() => Append('!')}>!</td>
+        <td on:click={() => Backspace()}>&#8592;</td>
     </tr>
     <tr>
-        <td on:click={() => AppendNum(4)}>4</td>
-        <td on:click={() => AppendNum(5)}>5</td>
-        <td on:click={() => AppendNum(6)}>6</td>
-        <td on:click={() => Operator('min')}>-</td>
+        <td on:click={() => Append(7)}>7</td>
+        <td on:click={() => Append(8)}>8</td>
+        <td on:click={() => Append(9)}>9</td>
+        <td on:click={() => Append('/')}>/</td>
+    </tr>
+    <tr>
+        <td on:click={() => Append(4)}>4</td>
+        <td on:click={() => Append(5)}>5</td>
+        <td on:click={() => Append(6)}>6</td>
+        <td on:click={() => Append('*')}>*</td>
     </tr>   
     <tr>
-        <td on:click={() => AppendNum(1)}>1</td>
-        <td on:click={() => AppendNum(2)}>2</td>
-        <td on:click={() => AppendNum(3)}>3</td>
-        <td rowspan="2" on:click={() => Operator('add')}>+</td>
+        <td on:click={() => Append(1)}>1</td>
+        <td on:click={() => Append(2)}>2</td>
+        <td on:click={() => Append(3)}>3</td>
+        <td on:click={() => Append('-')}>-</td>
     </tr>
     <tr>
-        <td on:click={() => AppendNum(0)}>0</td>
-        <td on:click={() => AppendNum('00')}>00</td>
+        <td on:click={() => AddZero(1)}>0</td>
+        <td on:click={() => AddZero(2)}>00</td>
         <td on:click={() => Equal()}>=</td>
+        <td on:click={() => Append('+')}>+</td>
     </tr>
 </table>
 
@@ -119,15 +124,18 @@
         font-size: 40px;
         table-layout: fixed;
         position: absolute;
-        top:20%;
+        top:10%;
         left: 30%;
+        border-radius: 30px;
     }
     table, th, td {
       border: 1px solid black;
-      border-collapse: collapse;
+      border-radius: 10px;
+      padding: 25px;
     }
     tr td{
         text-align: center;
+        transition: background-color 0.3s ease;
     }
     tr td:hover{
         background-color: rgba(31, 31, 32, 0.425);
@@ -136,5 +144,9 @@
     .header{
         float: right;
         margin-right: 30px;
+    }
+    table tr th{
+        background-color: rgba(96, 97, 99, 0.808);
+        border-spacing: 5px;
     }
     </style>
