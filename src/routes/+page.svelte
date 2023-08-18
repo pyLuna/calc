@@ -1,3 +1,4 @@
+export const prerender = true;
 <script lang="ts">
     let ans = '0';
     let sqrt = '&radic;';
