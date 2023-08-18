@@ -134,7 +134,7 @@
     }
     //removes the last character from the ans
     function Backspace(){
-        ans = ans.slice(0,-1);
+        ans = String(ans).slice(0,-1);
         if(ans.length === 0){
             ans = '0';
         }
